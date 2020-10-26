@@ -1,0 +1,64 @@
+UC1
+===
+SELECT DATABASE addressbook
+USE addressbook;
+SELECT DATABASE();
+
+UC2
+===
+CREATE TABLE contacts
+( 
+ first_name VARCHAR(25) NOT NULL,
+ last_name VARCHAR(25) NOT NULL,
+ address VARCHAR(50) NOT NULL,
+ city VARCHAR(50) NOT NULL,
+ state VARCHAR(50) NOT NULL,
+ zipcode VARCHAR(50) NOT NULL,
+ phone VARCHAR(50) NOT NULL,
+ email VARCHAR(100) NOT NULL
+);
+
+UC3
+===
+INSERT INTO contacts VALUES 
+('soumik','pal','palbazar','kolkata','wb','700075','9477328244','soumik@gmail.com'),
+('aritra','sinha','whitefield','bangalore','karnataka','655423','8787878787','aritra@gmail.com'), 
+('sreyansh','gupta','garia','kolkata','wb','700062','9898989898','sreyansh@gmail.com');
+
+UC4
+===
+UPDATE contacts SET city = 'noida' WHERE first_name = 'soumik';
+
+UC5
+===
+DELETE FROM contacts WHERE first_name = 'soumik'; 
+
+UC6
+===
+SELECT * FROM contacts WHERE city = 'bangalore'; 
+SELECT * FROM contacts WHERE state = 'wb'; 
+
+UC7
+===
+SELECT city,COUNT(city) FROM contacts GROUP BY city; 
+SELECT state,COUNT(state) FROM contacts GROUP BY state;
+
+UC8
+===
+SELECT * FROM contacts WHERE city = 'kolkata' ORDER BY first_name; 
+
+UC9
+===
+ALTER TABLE contacts ADD name VARCHAR(25); 
+ALTER TABLE contacts ADD type VARCHAR(25);
+
+UC10
+===
+INSERT INTO contacts VALUES ('sneha','gupta','sector 5','kolkata','wb','700024','9887656234','sneha@gmail.com', NULL, 'Family'); 
+SELECT type, COUNT(type) FROM contacts GROUP BY type;
+
+UC11
+===
+INSERT INTO addressbook VALUES                 
+('debashish','borat','airport','chennai','tamilnadu','766156','7617987816','debashish@gmail.com',NULL,'Friend'),                           
+('subham','roy','njp','siliguri','wb','799816','8716735622','subham@gmail.com', NULL,'Family'); 
