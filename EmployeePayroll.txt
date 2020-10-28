@@ -49,3 +49,155 @@ UC7
 SELECT gender, AVG(salary) FROM employee_payroll GROUP BY gender;
 SELECT gender, COUNT(name) FROM employee_payroll GROUP BY gender;
 SELECT gender, SUM(salary) FROM employee_payroll GROUP BY gender;
+
+UC8
+===
+ALTER TABLE employee_payroll ADD phone_number VARCHAR(250) AFTER name;
+ALTER TABLE employee_payroll ADD address VARCHAR(250) AFTER phone_number;
+ALTER TABLE employee_payroll ADD department VARCHAR(150) NOT NULL AFTER address;
+ALTER TABLE employee_payroll ALTER address SET DEFAULT 'TBD';
+DESCRIBE employee_payroll;
+
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| id           | int unsigned | NO   | PRI | NULL    | auto_increment |
+| name         | varchar(150) | NO   |     | NULL    |                |
+| phone_number | varchar(250) | YES  |     | NULL    |                |
+| address      | varchar(250) | YES  |     | TBD     |                |
+| department   | varchar(150) | NO   |     | NULL    |                |
+| gender       | char(1)      | YES  |     | NULL    |                |
+| salary       | double       | NO   |     | NULL    |                |
+| start        | date         | NO   |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+
+UC9
+===
+ALTER TABLE employee_payroll RENAME COLUMN salary TO basic_pay;
+ALTER TABLE employee_payroll ADD deductions DOUBLE NOT NULL AFTER basic_pay;
+ALTER TABLE employee_payroll ADD taxable_pay DOUBLE NOT NULL AFTER deductions;
+ALTER TABLE employee_payroll ADD tax DOUBLE NOT NULL AFTER taxable_pay;
+ALTER TABLE employee_payroll ADD net_pay DOUBLE NOT NULL AFTER tax;
+SELECT * FROM employee_payroll;
+
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+| id | name     | phone_number | address | department | gender | basic_pay | deductions | taxable_pay | tax | net_pay | start      |
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+|  1 | Soumik   | NULL         | NULL    |            | M      |     50000 |          0 |           0 |   0 |       0 | 2019-11-04 |
+|  2 | Aritra   | NULL         | NULL    |            | M      |     60000 |          0 |           0 |   0 |       0 | 2018-07-05 |
+|  3 | Sreyansh | NULL         | NULL    |            | F      |     55000 |          0 |           0 |   0 |       0 | 2019-01-14 |
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+-
+
+UC10
+===
+UPDATE employee_payroll SET department = 'Sales' WHERE name = 'Sreyansh';
+INSERT INTO employee_payroll ( name, department, gender, basic_pay, deductions, taxable_pay, tax, net_pay, start) VALUES ('Sreyansh', 'Marketing', 'F', 55000, 2000, 53000, 1000, 52000, '2019-01-03');
+SELECT * FROM employee_payroll WHERE name = 'Sreyansh';
+
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+------+---------+------------+
+| id | name     | phone_number | address | department | gender | basic_pay | deductions | taxable_pay | tax  | net_pay | start      |
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+------+---------+------------+
+|  3 | Sreyansh | NULL         | NULL    | Sales      | F      |     55000 |          0 |           0 |    0 |       0 | 2019-01-14 |
+|  4 | Sreyansh | NULL         | TBD     | Marketing  | F      |     55000 |       2000 |       53000 | 1000 |   52000 | 2019-01-03 |
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+------+---------+------------+
+
+UC11
+===
+CREATE TABLE company ( company_id INT PRIMARY KEY, company_name VARCHAR(150) NOT NULL );
+
+CREATE TABLE employee 					
+(
+ id 		INT unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ company_id 	INT REFERENCES company(company_id),
+ name           VARCHAR(200) NOT NULL,
+ phone_number 	VARCHAR(25) NOT NULL,
+ address 	VARCHAR(50) NOT NULL DEFAULT 'TBD',
+ gender 	CHAR(1) NOT NULL
+);
+
+CREATE TABLE payroll
+(
+ id 	INT REFERENCES employee(id),
+ basic_pay 	DOUBLE NOT NULL,
+ deductions 	DOUBLE NOT NULL,
+ taxable_pay 	DOUBLE NOT NULL,
+ tax 		DOUBLE NOT NULL,
+ net_pay 	DOUBLE NOT NULL
+);
+
+CREATE TABLE department
+(
+ dept_id 	INT PRIMARY KEY,
+ dept_name 	VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE employee_department
+(
+ emp_id 	INT REFERENCES employee(id),
+ dept_id 	INT REFERENCES department(dept_id)
+);
+
+UC12
+===
+INSERT INTO company VALUES 
+(1, "Samsung");
+
++------------+--------------+
+| company_id | company_name |
++------------+--------------+
+|          1 | Samsung      |
++------------+--------------+
+
+INSERT INTO employee(company_id, name, phone_number, address, gender) VALUES 					
+(1, 'Soumik', '9898989898', 'Hyderabad', 'M' ),
+(1, 'Aritra', '7865786523', 'Bangalore', 'M' ),
+(1, 'Sreyansh', '9976765436', 'Noida', 'F' );
+
++----+------------+----------+--------------+-----------+--------+
+| id | company_id | name     | phone_number | address   | gender |
++----+------------+----------+--------------+-----------+--------+
+|  1 |          1 | Soumik   | 9898989898   | Hyderabad | M      |
+|  2 |          1 | Aritra   | 7865786523   | Bangalore | M      |
+|  3 |          1 | Sreyansh | 9976765436   | Noida     | F      |
++----+------------+----------+--------------+-----------+--------+
+
+INSERT INTO payroll VALUES 					
+(1,50000,1000,49000,500,48500),
+(2,60000,3000,57000,1500,55500),
+(3,55000,2000,53000,1000,52000);
+
++----+-----------+------------+-------------+------+---------+
+| id | basic_pay | deductions | taxable_pay | tax  | net_pay |
++----+-----------+------------+-------------+------+---------+
+|  1 |     50000 |       1000 |       49000 |  500 |   48500 |
+|  2 |     60000 |       3000 |       57000 | 1500 |   55500 |
+|  3 |     55000 |       2000 |       53000 | 1000 |   52000 |
++----+-----------+------------+-------------+------+---------+
+
+INSERT INTO department VALUES
+(1,'Sales'),
+(2,'Marketing'),
+(3,'IT');
+
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|       1 | Sales     |
+|       2 | Marketing |
+|       3 | IT        |
++---------+-----------+
+
+INSERT INTO employee_department VALUES
+(1,3),
+(2,3),
+(3,1),
+(3,2);
+
++--------+---------+
+| emp_id | dept_id |
++--------+---------+
+|      1 |       3 |
+|      2 |       3 |
+|      3 |       1 |
+|      3 |       2 |
++--------+---------+
