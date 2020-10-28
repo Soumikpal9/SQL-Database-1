@@ -1,12 +1,12 @@
 UC1
 ===
-SELECT DATABASE addressbook
-USE addressbook;
+CREATE DATABASE addressbook_service
+USE addressbook_service;
 SELECT DATABASE();
 
 UC2
 ===
-CREATE TABLE contacts
+CREATE TABLE addressbook
 ( 
  first_name VARCHAR(25) NOT NULL,
  last_name VARCHAR(25) NOT NULL,
@@ -14,51 +14,220 @@ CREATE TABLE contacts
  city VARCHAR(50) NOT NULL,
  state VARCHAR(50) NOT NULL,
  zipcode VARCHAR(50) NOT NULL,
- phone VARCHAR(50) NOT NULL,
+ phone VARCHAR(20) NOT NULL,
  email VARCHAR(100) NOT NULL
 );
 
 UC3
 ===
-INSERT INTO contacts VALUES 
-('soumik','pal','palbazar','kolkata','wb','700075','9477328244','soumik@gmail.com'),
-('aritra','sinha','whitefield','bangalore','karnataka','655423','8787878787','aritra@gmail.com'), 
-('sreyansh','gupta','garia','kolkata','wb','700062','9898989898','sreyansh@gmail.com');
+INSERT INTO addressbook VALUES 
+('Soumik','Pal','Palbazar','Kolkata','West Bengal','700075','9898989898','soumik@gmail.com'),
+('Aritra','Sinha','Whitefield','Bangalore','Karnataka','655423','8787878787','aritra@gmail.com'), 
+('Sreyansh','Gupta','Garia','Kolkata','West Bengal','700062','9876987623','sreyansh@gmail.com');
+
++------------+-----------+------------+-----------+-------------+---------+------------+--------------------+
+| first_name | last_name | address    | city      | state       | zipcode | phone      | email              |
++------------+-----------+------------+-----------+-------------+---------+------------+--------------------+
+| Soumik     | Pal       | Palbazar   | Kolkata   | West Bengal | 700075  | 9898989898 | soumik@gmail.com   |
+| Aritra     | Sinha     | Whitefield | Bangalore | Karnataka   | 655423  | 8787878787 | aritra@gmail.com   |
+| Sreyansh   | Gupta     | Garia      | Kolkata   | West Bengal | 700062  | 9876987623 | sreyansh@gmail.com |
++------------+-----------+------------+-----------+-------------+---------+------------+--------------------+
 
 UC4
 ===
-UPDATE contacts SET city = 'noida' WHERE first_name = 'soumik';
+UPDATE addressbook SET city = 'Noida' WHERE first_name = 'Soumik';
+
++------------+-----------+------------+-----------+-------------+---------+------------+--------------------+
+| first_name | last_name | address    | city      | state       | zipcode | phone      | email              |
++------------+-----------+------------+-----------+-------------+---------+------------+--------------------+
+| Soumik     | Pal       | Palbazar   | Noida     | West Bengal | 700075  | 9898989898 | soumik@gmail.com   |
+| Aritra     | Sinha     | Whitefield | Bangalore | Karnataka   | 655423  | 8787878787 | aritra@gmail.com   |
+| Sreyansh   | Gupta     | Garia      | Kolkata   | West Bengal | 700062  | 9876987623 | sreyansh@gmail.com |
++------------+-----------+------------+-----------+-------------+---------+------------+--------------------+
 
 UC5
 ===
-DELETE FROM contacts WHERE first_name = 'soumik'; 
+DELETE FROM addressbook WHERE first_name = 'Soumik'; 
+
++------------+-----------+------------+-----------+-------------+---------+------------+--------------------+
+| first_name | last_name | address    | city      | state       | zipcode | phone      | email              |
++------------+-----------+------------+-----------+-------------+---------+------------+--------------------+
+| Aritra     | Sinha     | Whitefield | Bangalore | Karnataka   | 655423  | 8787878787 | aritra@gmail.com   |
+| Sreyansh   | Gupta     | Garia      | Kolkata   | West Bengal | 700062  | 9876987623 | sreyansh@gmail.com |
++------------+-----------+------------+-----------+-------------+---------+------------+--------------------+
 
 UC6
 ===
-SELECT * FROM contacts WHERE city = 'bangalore'; 
-SELECT * FROM contacts WHERE state = 'wb'; 
+SELECT * FROM addressbook WHERE city = 'Bangalore';
+
++------------+-----------+------------+-----------+-----------+---------+------------+------------------+
+| first_name | last_name | address    | city      | state     | zipcode | phone      | email            |
++------------+-----------+------------+-----------+-----------+---------+------------+------------------+
+| Aritra     | Sinha     | Whitefield | Bangalore | Karnataka | 655423  | 8787878787 | aritra@gmail.com |
++------------+-----------+------------+-----------+-----------+---------+------------+------------------+
+ 
+SELECT * FROM addressbook WHERE state = 'West Bengal'; 
+
++------------+-----------+---------+---------+-------------+---------+------------+--------------------+
+| first_name | last_name | address | city    | state       | zipcode | phone      | email              |
++------------+-----------+---------+---------+-------------+---------+------------+--------------------+
+| Sreyansh   | Gupta     | Garia   | Kolkata | West Bengal | 700062  | 9876987623 | sreyansh@gmail.com |
++------------+-----------+---------+---------+-------------+---------+------------+--------------------+
 
 UC7
 ===
-SELECT city,COUNT(city) FROM contacts GROUP BY city; 
-SELECT state,COUNT(state) FROM contacts GROUP BY state;
+SELECT city,COUNT(city) FROM addressbook GROUP BY city; 
+
++-----------+-------------+
+| city      | count(city) |
++-----------+-------------+
+| Bangalore |           1 |
+| Kolkata   |           1 |
++-----------+-------------+
+
+SELECT state,COUNT(state) FROM addresbook GROUP BY state;
+
++-------------+--------------+
+| state       | count(state) |
++-------------+--------------+
+| Karnataka   |            1 |
+| West Bengal |            1 |
++-------------+--------------+
 
 UC8
 ===
-SELECT * FROM contacts WHERE city = 'kolkata' ORDER BY first_name; 
+INSERT INTO addressbook VALUES('Soumik', 'Pal', 'Palbazar', 'Kolkata', 'West Bengal', '700075', '9898989898', 'soumik@gmail.com');
+SELECT * FROM addressbook WHERE city = 'Kolkata' ORDER BY first_name; 
+
++------------+-----------+----------+---------+-------------+---------+------------+--------------------+
+| first_name | last_name | address  | city    | state       | zipcode | phone      | email              |
++------------+-----------+----------+---------+-------------+---------+------------+--------------------+
+| Soumik     | Pal       | Palbazar | Kolkata | West Bengal | 700075  | 9898989898 | soumik@gmail.com   |
+| Sreyansh   | Gupta     | Garia    | Kolkata | West Bengal | 700062  | 9876987623 | sreyansh@gmail.com |
++------------+-----------+----------+---------+-------------+---------+------------+--------------------+
 
 UC9
 ===
-ALTER TABLE contacts ADD name VARCHAR(25); 
-ALTER TABLE contacts ADD type VARCHAR(25);
+ALTER TABLE addressbook ADD type VARCHAR(25);
 
 UC10
 ===
-INSERT INTO contacts VALUES ('sneha','gupta','sector 5','kolkata','wb','700024','9887656234','sneha@gmail.com', NULL, 'Family'); 
-SELECT type, COUNT(type) FROM contacts GROUP BY type;
+INSERT INTO addressbook VALUES ('Sneha','Gupta','Sector 5','Kolkata','West Bengal','700024','9887656234','sneha@gmail.com', 'Family'); 
+SELECT type, COUNT(type) FROM addressbook GROUP BY type;
+
++--------+-------------+
+| type   | count(type) |
++--------+-------------+
+| NULL   |           0 |
+| Family |           1 |
++--------+-------------+
 
 UC11
 ===
 INSERT INTO addressbook VALUES                 
-('debashish','borat','airport','chennai','tamilnadu','766156','7617987816','debashish@gmail.com',NULL,'Friend'),                           
-('subham','roy','njp','siliguri','wb','799816','8716735622','subham@gmail.com', NULL,'Family'); 
+('Debashish','Borat','Airport','Chennai','Tamilnadu','766156','7617987816','debashish@gmail.com','Friend'),                           
+('Subham','Roy','NJP','Siliguri','West Bengal','799816','8716735622','subham@gmail.com','Family'); 
+SELECT type, COUNT(type) FROM addressbook GROUP BY type;
+
++--------+-------------+
+| type   | count(type) |
++--------+-------------+
+| NULL   |           0 |
+| Family |           2 |
+| Friend |           1 |
++--------+-------------+
+
+UC12
+===
+ER Diagram attached herewith.
+
+UC13
+===
+CREATE TABLE AdressBook (addressbook_name VARCHAR(100) NOT NULL PRIMARY KEY, type VARCHAR(100) NOT NULL);
+
+INSERT INTO AdressBook VALUES ('Book 1', 'Family'), ('Book 2', 'Friend'), ('Book 3', 'NULL');
+
++------------------+--------+
+| addressbook_name | type   |
++------------------+--------+
+| Book 1           | Family |
+| Book 2           | Friend |
+| Book 3           | NULL   |
++------------------+--------+
+
+CREATE TABLE Contacts
+(person_id INT NOT NULL PRIMARY KEY,
+ addressbook_name VARCHAR(100) REFERENCES AdressBook(addressbook_name),
+ first_name VARCHAR(100) NOT NULL,
+ last_name VARCHAR(100) NOT NULL
+);
+
+INSERT INTO Contacts VALUES
+(1, 'NULL', 'Soumik', 'Pal'),
+(2, 'NULL', 'Aritra', 'Sinha'),
+(3, 'NULL', 'Sreyansh', 'Gupta'),
+(4, 'Family', 'Sneha', 'Gupta'),
+(5, 'Family', 'Subham', 'Roy'),
+(6, 'Friend', 'Debashish', 'Borat');
+
++-----------+------------------+------------+-----------+
+| person_id | addressbook_name | first_name | last_name |
++-----------+------------------+------------+-----------+
+|         1 | NULL             | Soumik     | Pal       |
+|         2 | NULL             | Aritra     | Sinha     |
+|         3 | NULL             | Sreyansh   | Gupta     |
+|         4 | Family           | Sneha      | Gupta     |
+|         5 | Family           | Subham     | Roy       |
+|         6 | Friend           | Debashish  | Borat     |
++-----------+------------------+------------+-----------+
+
+CREATE TABLE Contact_details
+(person_id INT REFERENCES Contacts(person_id),
+ phone VARCHAR(20) NOT NULL,
+ email VARCHAR(100) NOT NULL
+);
+
+INSERT INTO Contact_details VALUES
+(1, '9898989898', 'soumik@gmail.com'),
+(2, '8787878787', 'aritra@gmail.com'),
+(3, '9876987623', 'sreyansh@gmail.com'),
+(4, '9887656234', 'sneha@gmail.com'),
+(5, '8716735622', 'subham@gmail.com'),
+(6, '7617987816', 'debashish@gmail.com');
+
++-----------+------------+---------------------+
+| person_id | phone      | email               |
++-----------+------------+---------------------+
+|         1 | 9898989898 | soumik@gmail.com    |
+|         2 | 8787878787 | aritra@gmail.com    |
+|         3 | 9876987623 | sreyansh@gmail.com  |
+|         4 | 9887656234 | sneha@gmail.com     |
+|         5 | 8716735622 | subham@gmail.com    |
+|         6 | 7617987816 | debashish@gmail.com |
++-----------+------------+---------------------+
+
+CREATE TABLE Address(
+person_id    INT REFERENCES Contacts(person_id),
+street  VARCHAR(50) NOT NULL,
+city  VARCHAR(50) NOT NULL,
+state  VARCHAR(50) NOT NULL,
+zipcode  VARCHAR(50) NOT NULL);
+
+INSERT INTO Address VALUES
+(1, 'PalBazar', 'Kolkata', 'West Bengal', '700075'),
+(2, 'Whitefield', 'Bangalore', 'Karnataka', '655423'),
+(3, 'Garia', 'Kolkata', 'West Bengal', '700062'),
+(4, 'Sector 5', 'Kolkata', 'West Bengal', '700024'),
+(5, 'NJP', 'Siliguri', 'West Bengal', '799816'),
+(6, 'Airport', 'Chennai', 'Tamilnadu', '766156');\
+
++-----------+------------+-----------+-------------+---------+
+| person_id | street     | city      | state       | zipcode |
++-----------+------------+-----------+-------------+---------+
+|         1 | PalBazar   | Kolkata   | West Bengal | 700075  |
+|         2 | Whitefield | Bangalore | Karnataka   | 655423  |
+|         3 | Garia      | Kolkata   | West Bengal | 700062  |
+|         4 | Sector 5   | Kolkata   | West Bengal | 700024  |
+|         5 | NJP        | Siliguri  | West Bengal | 799816  |
+|         6 | Airport    | Chennai   | Tamilnadu   | 766156  |
++-----------+------------+-----------+-------------+---------+
